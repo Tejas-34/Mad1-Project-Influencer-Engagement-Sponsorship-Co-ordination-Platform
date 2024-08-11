@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Search Influencers</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background-color: rgb(236, 222, 224);">
+
+<div class="container mt-3 pt-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1); border-radius: 8px; background-color: white; min-height: 700px;">
+  {% include 'nav_sponsor.html' %}
+
+
+    <div class="container mt-3">
+      <h1>Search Influencers</h1>
+      <form method="POST" action="{{ url_for('search_inf',id=user.id) }}">
+        <div class="form-group">
+          <label for="keyword">Name</label>
+          <input type="text" class="form-control" id="keyword" name="Name" placeholder="Enter Name">
+        </div>
+
+        <div class="form-group">
+          <label for="Category">Category</label>
+          <input type="text" class="form-control" id="Category" name="Category" placeholder="Enter Category">
+
+        <button type="submit" class="btn btn-primary mt-2">Search</button>
+        <button type="submit" class="btn btn-secondary mt-2">See All</button>
+      </form>
+
+      <div class="mt-4">
+        {% if search_results %}
+          <h2>Search Results</h2>
+          <div class="row">
+            {% for influencer in search_results %}
+              <div class="col-md-4">
+                <div class="card mb-3">
+                  <div class="card-body">
+                    <h5 class="card-title">{{ influencer.user.Name }}</h5>
+                    <p class="card-text">Category: <b>{{ influencer.Category }}</b><br>Reach: <b>{{ influencer.Reach }}</b><br>Bio: <b>{{ influencer.user.Bio }}</b></p>
+                    
+                    <button type="button" class="btn btn-success" data-toggle="modal" data-target="#requestModal{{ loop.index }}">Send Request</button>
+                  </div>
+                </div>
+              </div>
+              
+
+<!---------------------------------------------- Send Request Modal ----------------------------------------------------------->
+              <div class="modal fade" id="requestModal{{ loop.index }}" tabindex="-1" role="dialog" aria-labelledby="requestModalLabel{{ loop.index }}" aria-hidden="true">
+                <div class="modal-dialog" role="document">
+                  
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="requestModalLabel{{ loop.index }}"> Details</h5>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                      </button>
+                    </div>
+                    <div class="modal-body">
+                      <form action="{{url_for('send_req',id=user.id, inf_id=influencer.user.id)}}" method="POST" >
+                        <div class="form-group" >
+                            <label for="visibility">Select Campage to Send Request</label>
+                            <select class="form-control" name="campaign_id" id="visibility" required>
+                              {% for camp in Campaigns %}
+                                <option value="{{camp.id}}">{{camp.name}}</option>
+                              {% endfor %}
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="Payment">Payment</label>
+                          <input type="number" class="form-control" id="Payment" name="payment_amount" placeholder="Enter Payment Amount" required>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="requirements">Requirements</label>
+                          <textarea class="form-control" id="requirements" name="requirements" rows="3"></textarea>
+                        </div>
+
+                        <div class="form-group">
+                          <label for="message">Message</label>
+                          <textarea class="form-control" id="message" name="message" rows="3"></textarea>
+                        </div>
+
+                        <div class="modal-footer">
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                            <button type="submit" class="btn btn-success" >Submit Request</button>
+                        </div>
+
+                      </form>
+
+
+                    </div>
+
+                    </div>
+
+                 
+
+                    </div>
+                    
+                  </div>
+              </div>
+
+          
+            {% endfor %}
+          </div>
+        {% else %}
+          <p>No results found</p>
+        {% endif %}
+      </div>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Manage Users</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+
+
+  <div class="container mt-3 pt-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1);  border-radius: 8px; background-color: white; min-height: 700px;" >
+      {% include 'nav_admin.html' %}
+
+      <div class="container mt-4">
+      <h1 class="mb-4">Manage Users</h1>
+      
+      <!------------------------------------ Table to list users ---------------------------->
+
+      <div class="table-responsive">
+          <table class="table table-striped">
+              <thead>
+                  <tr>
+                      <th>ID</th>
+                      <th>Username</th>
+                      <th>Email</th>
+                      <th>Role</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                  </tr>
+              </thead>
+              <tbody>
+                  
+                
+
+                    <p>Total users are: {{total}}</p>
+
+                    {% for user in users %}
+                        <tr>
+                            <td>{{loop.index}}</td>
+                            <td>{{user.Username}}</td>
+                            <td>{{user.Email}}</td>
+                            <td>{{user.Role}}</td>
+
+
+                            {% if user.flagged %}
+                            <td><span class="badge badge-warning">Flagged</span></td>
+                            
+                            <td>
+                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editUserModal{{ loop.index }}">Edit</button>
+                                <a href="{{url_for('flag_user',id=user.id)}}" class="btn btn-warning btn-sm">Unflag</a>
+                                <a href="{{url_for('delete_user',user_id=user.id)}}" class="btn btn-danger btn-sm">Delete</a>
+                            </td>
+
+
+                            {% else %}
+                            <td><span class="badge badge-success">Active</span></td>
+                            <td>
+                                <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editUserModal{{ loop.index }}">Edit</button>
+                                <a href="{{url_for('flag_user',id=user.id)}}" class="btn btn-danger btn-sm">flag</a>
+                                <button class="btn btn-info btn-sm" data-toggle="modal" data-target="#viewUserModal{{ loop.index }}">View</button>
+                                
+                            </td>
+
+
+                            {% endif %}
+                        </tr>
+
+
+                        <!----------------------------- Edit User Modal ------------------------------------>
+
+                        <div class="modal fade" id="editUserModal{{ loop.index }}" tabindex="-1" aria-labelledby="editUserModalLabel{{ loop.index }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="editUserModalLabel">Edit User</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <form id="editUserForm" action="{{url_for('update',id=user.id)}}" method="POST">
+                                            <div class="form-group">
+                                                <label for="editUsername">Username</label>
+                                                <input type="text" class="form-control" id="editUsername" name="username" value="{{user.Username}}" required>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="editEmail">Email</label>
+                                                <input type="email" class="form-control" id="editEmail" name="email" value="{{user.Email}}" required>
+                                            </div>
+
+                                            <div class="form-group">
+                                                <label for="editName">Name</label>
+                                                <input type="text" class="form-control" id="editName" name="name" required value="{{user.Name}}">
+                                            </div>
+
+
+                                            <div class="form-group">
+                                                <label for="editpass">Password</label>
+                                                <input type="text" class="form-control" id="editpass" name="password" value="{{user.Password}}" required>
+                                            </div>
+                                            <button type="submit"  class="btn btn-primary">Save Changes</button>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <!---------------------------- View user Modal -------------------------------------------->
+
+                        <div class="modal fade" id="viewUserModal{{ loop.index }}" tabindex="-1" aria-labelledby="viewUserModalLabel{{ loop.index }}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content" style="min-height: 250px;">
+                                    <div class="modal-header">
+                                        <h5 class="modal-title" id="viewUserModalLabel">{{user.Name}}</h5>
+                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <p>Role: <b> {{user.Role}}</b></p>
+                                        <p>Bio: <b> {{user.Bio}}</b></p>
+
+                                        {% if user.Role=="influencer" %}
+                                            <p>Category: <b> {{user.influencer.Category}}</b></p>
+                                            <p>Niche: <b> {{user.influencer.Niche}}</b></p>
+                                            <p>Reach: <b> {{user.influencer.Reach}}</b></p>
+
+                                        {% else %}
+                                            <p>Budget: <b> {{user.sponsor.Budget}}$</b></p>
+                                            <p>Industry: <b> {{user.sponsor.Industry}}</b></p>
+                                    
+                                        {% endif %}
+
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+
+                    {% endfor %}
+                  
+              </tbody>
+          </table>
+      </div>
+
+
+
+    </div>
+
+  </div>
+    
+
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

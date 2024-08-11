@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Create Campaign</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: rgb(236, 222, 224);">
+
+<div class="container mt-3 pt-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1);  border-radius: 8px; background-color: white; " >
+    {% include 'nav_sponsor.html' %}
+
+
+    <!----------------------------------- Create Campaign ------------------------------------>
+    <div class="container mt-5">
+      <h2>Create Campaign</h2>
+      <form action="{{url_for('create_camp', id=user.id)}}" method="POST">
+
+          <div class="form-group">
+              <label for="campaignName">Campaign Name</label>
+              <input type="text" class="form-control" name="Name" id="campaignName" placeholder="Enter campaign name" required>
+          </div>
+
+          <div class="form-group">
+              <label for="description">Description</label>
+              <textarea class="form-control" id="description" name="Description" rows="4" placeholder="Enter campaign description" required></textarea>
+          </div>
+
+          <div class="form-group">
+              <label for="startDate">Start Date</label>
+              <input type="date" class="form-control" name="Start_date" id="startDate" required>
+          </div>
+
+          <div class="form-group">
+              <label for="endDate">End Date</label>
+              <input type="date" class="form-control" name="End_date" id="endDate" required>
+          </div>
+
+          <div class="form-group">
+              <label for="budget">Budget</label>
+              <input type="number" class="form-control" name="Budget" id="budget" placeholder="Enter budget" required>
+          </div>
+
+          <div class="form-group">
+              <label for="visibility">Visibility</label>
+              <select class="form-control" name="visibility" id="visibility" required>
+                  <option value="public">Public</option>
+                  <option value="private">Private</option>
+              </select>
+          </div>
+
+          <div class="form-group">
+              <label for="goals">Goals</label>
+              <textarea class="form-control" name="goal" id="goals" rows="3" placeholder="Enter campaign goals" required></textarea>
+          </div>
+
+          <div class="form-group">
+              <label for="niche">Niche/Category</label>
+              <input type="text" class="form-control" name="category" id="niche" placeholder="Enter niche/category" required>
+          </div>
+
+          <button type="submit" class="btn btn-primary">Create Campaign</button>
+      </form>
+    </div>
+    
+        
+    </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

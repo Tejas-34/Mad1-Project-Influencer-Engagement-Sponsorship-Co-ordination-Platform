@@ -1,0 +1,28 @@
+<nav class="navbar navbar-expand-lg navbar-light " style="background-color: rgb(233, 239, 153); border-radius: 12px;">
+  <a class="navbar-brand" href="#" style="font-weight:300; color: darkmagenta;" ><b>Influencer Dashboard</b></a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+  </button>
+
+  <div class="collapse navbar-collapse" style="margin-left:100px" id="navbarNav">
+      <ul class="navbar-nav">
+          <li class="nav-item " style="margin-left:200px;">
+              <a class="nav-link" href="{{url_for('dashboard_inf', id=user.id)}}">Profile</a>
+          </li>
+          <li class="nav-item ml-3">
+              <a class="nav-link" href="{{url_for('inf_update', id=user.id)}}",id=id>Update Profile</a>
+          </li>
+          <li class="nav-item ml-3">
+              <a class="nav-link" href="{{url_for('add_req', id=user.id)}}">Ad Requests</a>
+          </li>
+          <li class="nav-item ml-3">
+              <a class="nav-link" href="{{url_for('search_camp',id=user.id)}}">Search Campaigns</a>
+          </li>
+
+
+          <li class="nav-item ml-3">
+              <a class="nav-link" href= "{{url_for('logout',id=user.id)}}">Logout</a>
+          </li>
+      </ul>
+  </div>
+</nav>

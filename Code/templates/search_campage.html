@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <title>Search Campagens</title>
+</head>
+<body>
+
+    <div class="container mt-3 pt-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1);  border-radius: 8px; background-color: white; min-height: 700px;" >
+        {% include 'nav_influ.html' %}
+  
+      <!----------------------------------  Search Campaigns ------------------------------------------------>
+       <div class="card mb-4 mt-5" >
+       <div class="card-body" >
+           <h4 class="card-title">Search Campaigns</h4>
+           <form action="{{url_for('search_camp',id=user.id)}}" method="POST" class="form-inline">
+               <input type="text" name="name" class="form-control mb-2 mr-sm-2" placeholder="Search by name">
+               <input type="text" name="search" class="form-control mb-2 mr-sm-2" placeholder="Search by category">
+               <button type="submit" class="btn btn-primary mb-2 mr-2">Search</button>
+               <button type="submit" class="btn btn-info mb-2">See All</button>
+           </form>
+           <table class="table mt-2">
+               <thead>
+                   <tr>
+                       <th>Campaign</th>
+                       <th>Sponsor Name</th>
+                       <th>Budget</th>
+                       <th>Actions</th>
+                   </tr>
+               </thead>
+               <tbody>
+                   
+                   {% for campaign in public_campaigns %}
+                       <tr>
+                           <td>{{ campaign.name }}</td>
+                           <td> {{ campaign.sponsor.user.Name }}</td>
+                           <td>${{ campaign.budget }}</td>
+                           <td>
+                               <button type="button" class="btn btn-info" data-toggle="modal" data-target="#updatecampaignModal{{ loop.index }}">View </button>
+                               <button type="button" class="btn btn-success" data-toggle="modal" data-target="#sendReqModal{{ loop.index }}">Send Request </button>
+                           </td>
+                       </tr>
+
+
+
+
+                       <!-------------------------- Modal for view campaign -------------------------------------------->
+                       <div class="modal fade" id="updatecampaignModal{{ loop.index }}" tabindex="-2" role="dialog" aria-labelledby="updatecampaignModal{{ loop.index }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <h5 class="modal-title" id="updatecampaignModal{{ loop.index }}"><strong style="color: rgb(143, 139, 134);">{{ campaign.name }}</strong> Details</h5>
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+                            <div class="modal-body">
+                                <div class="container mt-2">
+                                    <div class="card">
+                                        <div class="card-body">
+                                            
+                                            <p><strong>Description:</strong> {{ campaign.description }}</p>
+                                            <p><strong>Start Date:</strong> {{ campaign.start_date.strftime('%d/%m/%Y') }}</p>
+                                            <p><strong>End Date:</strong> {{ campaign.end_date.strftime('%d/%m/%Y') }}</p>
+                                            <p><strong>Budget:</strong> ${{ campaign.budget }}</p>
+                                            <p><strong>Goals:</strong> {{ campaign.goals }}</p>
+                                            <p><strong>Category:</strong> {{ campaign.category }}</p>
+                                            
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                              
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+
+
+
+                       <!-------------------------- Modal for send request ------------------------------------->
+                       <div class="modal fade" id="sendReqModal{{ loop.index }}" tabindex="-2" role="dialog" aria-labelledby="sendReqModal{{ loop.index }}" aria-hidden="true">
+                        <div class="modal-dialog" role="document">
+                          <div class="modal-content">
+                            <div class="modal-header">
+                              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                <span aria-hidden="true">&times;</span>
+                              </button>
+                            </div>
+
+                            
+                            <div class="modal-body">
+                                <div class="container mt-2">
+                                    <div class="card">
+                                        <div class="card-body">
+
+                                            <form id="editUserForm" action="{{url_for('send_request',id=user.id,camp_id=campaign.id,spo_id=campaign.sponsor.id)}}" method="POST">
+                                                <div class="form-group">
+                                                  <label for="message">Message</label>
+                                                  <input type="text" class="form-control" id="message" name="message" >
+                                              </div>
+    
+                                                  <button type="submit"  class="btn btn-success">Send</button>
+                                              </form>
+                                            
+                                        </div>
+                                    </div>
+                                </div>
+                              
+                              
+                            </div>
+                            
+                          </div>
+                        </div>
+                      </div>
+
+                   {% endfor %}
+
+               </tbody>
+           </table>
+       </div>
+    </div>
+    </div>
+
+
+    
+</body>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</html>

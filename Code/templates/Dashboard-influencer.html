@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Influencer Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: rgb(236, 222, 224);">
+
+<div class="container mt-3 pt-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1);  border-radius: 8px; background-color: white; " >
+    {% include 'nav_influ.html' %}
+
+    <div class="container mt-4">
+        <h4 >Welcome, <strong style="color: rgb(84, 94, 94);">{{ user.Username }} </strong> </h4>
+        
+        <!-------------------------- Profile Overview ------------------------------->
+        <div class="card mb-4 mt-4">
+            <div class="card-body">
+                <h4 class="card-title">Profile Overview</h4>
+                <p class="card-text"><strong>Name: </strong>{{ user.Name }}</p>
+                <p class="card-text"><strong>Email: </strong> {{ user.Email }} </p>
+                <p class="card-text"><strong>Reach: </strong> {{ user.influencer.Reach }}</p>
+                <p class="card-text"><strong>Category: </strong> {{ user.influencer.Category }}</p>
+                <p class="card-text"><strong>Niche: </strong> {{ user.influencer.Niche }}</p>
+                <p class="card-text"><strong>Bio: </strong> {{ user.Bio }}</p>
+                
+            </div>
+        </div>
+
+        
+
+        <!------------------------------- Active Campagens -------------------------------->
+        <div class="card mb-4">
+            <div class="card-body">
+                <h4 class="card-title">Your campaigns</h4>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Campaign Name</th>
+                            
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for ad_request in request %}
+                        {% if ad_request.status == "Accepted" %}
+                            <tr>
+                                <td> {{ ad_request.campaign.name }}</td>
+                                <td>
+                                    <button type="button" class="btn btn-info" data-toggle="modal" data-target="#viewcampaignModal{{ loop.index }}">View </button>
+                                </td>
+                            </tr>
+
+                    <!------------------------------- View Campagin Modal --------------------------------------->
+                            <div class="modal fade" id="viewcampaignModal{{ loop.index }}" tabindex="-2" role="dialog" aria-labelledby="viewcampaignModal{{ loop.index }}" aria-hidden="true">
+                                <div class="modal-dialog" role="document">
+                                  <div class="modal-content">
+                                    <div class="modal-header">
+                                      <h5 class="modal-title" id="viewcampaignModal{{ loop.index }}"><strong style="color: rgb(143, 139, 134);">{{ ad_request.campaign.name }}</strong> Details</h5>
+                                      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                        <span aria-hidden="true">&times;</span>
+                                      </button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div class="container mt-2">
+                                            <div class="card">
+                                                <div class="card-body">
+                                                    
+                                                    <p><strong>Description:</strong> {{ ad_request.campaign.description }}</p>
+                                                    <p><strong>Start Date:</strong> {{ ad_request.campaign.start_date.strftime('%d/%m/%Y') }}</p>
+                                                    <p><strong>End Date:</strong> {{ ad_request.campaign.end_date.strftime('%d/%m/%Y') }}</p>
+                                                    <p><strong>Budget:</strong> ${{ ad_request.campaign.budget }}</p>
+                                                    <p><strong>Goals:</strong> {{ ad_request.campaign.goals }}</p>
+                                                    <p><strong>Category:</strong> {{ ad_request.campaign.category }}</p>
+                                                    
+                                                    
+                                                </div>
+                                            </div>
+                                        </div>
+                                      
+                                      
+                                    </div>
+                                    
+                                  </div>
+                                </div>
+                              </div>
+                            {% endif  %}
+
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+</html>

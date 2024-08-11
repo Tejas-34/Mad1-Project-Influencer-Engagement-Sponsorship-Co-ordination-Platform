@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body style="background-color: rgb(236, 222, 224);">
+
+<div class="container mt-3 pt-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1);  border-radius: 8px; background-color: white; min-height: 700px; " >
+  {% include 'nav_admin.html' %}
+
+  <div>
+    <h3 class="mt-5">Welcome <b>Admin</b></h3>
+
+    <!-------------------------------------------------------- Graphs ----------------------------------->
+    {% if file1 %}
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename=file1.split('/')[-1]) }}" alt="Bar Chart" class="img-fluid">
+            </div>
+            <div class="col-md-6">
+                <img src="{{ url_for('static', filename=file2.split('/')[-1]) }}" alt="Pie Chart" class="img-fluid">
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    
+
+  </div>
+  
+
+    
+</div>
+
+<script src="{{ url_for('static', filename='js/jquery.min.js') }}"></script>
+<script src="{{ url_for('static', filename='js/bootstrap.bundle.min.js') }}"></script>
+</body>
+</html>
+
+
+

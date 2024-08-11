@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+  <title>Influencer Update</title>
+</head>
+<body style="background-color: rgb(236, 222, 224);">
+
+  <div class="container mt-3 pt-3 mb-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1);  border-radius: 8px; background-color: white;">
+    {% include 'nav_influ.html' %}
+
+
+    <div class="container mt-3">
+      <h2>Profile</h2>
+      <div class="card-body">
+
+        <!-------------------------- Update form for Influencer ---------------------------------->
+        <form action="{{url_for('inf_update',id=user.id)}}" method="post">
+            <div>
+
+                <div class="form-group">
+                  <label for="Name">Name</label>
+                  <input type="text" class="form-control" id="Name" name="Name" value="{{ user.Name }}">
+                </div>
+
+                <div class="form-group">
+                  <label for="Email">Email</label>
+                  <input type="text" class="form-control" id="Email" name="Email" value="{{ user.Email }}">
+                </div>
+
+
+
+                  <div class="form-group">
+                      <label for="category">Category</label>
+                      <input type="text" class="form-control" id="category" name="Category" value="{{ user.influencer.Category }}">
+                  </div>
+
+                  <div class="form-group">
+                      <label for="Niche">Niche</label>
+                      <input type="text" class="form-control" id="Niche" name="Niche" value="{{ user.influencer.Niche }}">
+                  </div>
+
+                  <div class="form-group">
+                      <label for="Reach">Reach</label>
+                      <input type="text" class="form-control" id="Reach" name="Reach" value="{{ user.influencer.Reach }}">
+                  </div>
+              </div>
+
+
+            
+
+            <div class="form-group">
+              <label for="Bio">Bio</label>
+              <input type="text" class="form-control" id="Bio" name="Bio" value="{{ user.Bio}}">
+            </div>
+  
+            <div class="form-group">
+              <label for="Username">Username</label>
+              <input type="text" class="form-control" id="Username" name="Username" value="{{ user.Username }}">
+            </div>
+  
+  
+            <div class="form-group">
+              <label for="Password">Password</label>
+              <input type="text" class="form-control" id="Password" name="Password" value="{{ user.Password }}">
+            </div>
+
+            <div class="modal-footer">
+                <button type="submit" class="btn btn-primary">Save changes</button>
+            </div>
+         </form>
+
+
+      </div>
+    </div>
+
+  </div>
+    
+</body>
+</html>

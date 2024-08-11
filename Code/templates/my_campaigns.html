@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Sponsor Campaign</title>
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+</head>
+
+<body style="background-color: rgb(236, 222, 224);">
+
+<div class="container mt-3 pt-3" style="box-shadow: 0px 0px 20px rgba(0,0,0.1);  border-radius: 8px; background-color: white; min-height: 700px;">
+  {% include 'nav_sponsor.html' %}
+
+  <div class="container mt-3">
+    <h1>My Campaigns</h1>
+    <div class="row">
+      {% for campaign_index in range(campaigns|length) %}
+      {% set campaign = campaigns[campaign_index] %}
+      <div class="col-md-4">
+        <div class="card mb-3">
+          <div class="card-body">
+            <h5 class="card-title">Name: {{ campaign.name }}</h5>
+            <p class="card-text">Description: {{ campaign.description }}</p>
+            <p class="card-text">Start Date: {{ campaign.start_date.strftime('%m/%d/%Y') }}</p>
+            <p class="card-text">End Date: {{ campaign.end_date.strftime('%m/%d/%Y') }}</p>
+
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#campaignModal{{ campaign_index }}">Request Details</button>
+            <button type="button" class="btn btn-secondary" data-toggle="modal" data-target="#updatecampaignModal{{ campaign_index }}">Update</button>
+            <a class="btn btn-danger" href="{{ url_for('del_camp', id=campaign.id, user=user.id) }}">Delete</a>
+          </div>
+        </div>
+      </div>
+      
+      <!-------------------------------------------- Request Detail Modal ---------------------------------------------------------->
+      <div class="modal fade" id="campaignModal{{ campaign_index }}" tabindex="-1" role="dialog" aria-labelledby="campaignModalLabel{{ campaign_index }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="campaignModalLabel{{ campaign_index }}"><b style="color: gray;">{{ campaign.name }}</b> Request Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <div class="table-responsive">
+                <table class="table table-striped">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Username</th>
+                      <th>Status</th>
+                      <th>Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {% for req_index in range(campaign.adrequests|length) %}
+                    {% set req = campaign.adrequests[req_index] %}
+                    <tr>
+                      <td>{{ req_index + 1 }}</td>
+                      <td>{{ req.influencer.user.Name }}</td>
+                      {% if req.status == 'Pending' %}
+                      <td><span class="badge badge-warning">{{ req.status }}</span></td>
+                      {% elif req.status == 'Accepted' %}
+                      <td><span class="badge badge-success">{{ req.status }}</span></td>
+                      {% else %}
+                      <td><span class="badge badge-danger">{{ req.status }}</span></td>
+                      {% endif %}
+                      <td>
+                        <button class="btn btn-primary btn-sm" data-toggle="modal" data-target="#editAdrequestModal{{ campaign_index }}-{{ req_index }}">Edit</button>
+                        <a href="{{ url_for('delete_adreq', id=req.id, user_id=user.id) }}" class="btn btn-danger btn-sm">Delete</a>
+                      </td>
+                    </tr>
+
+                    <!-------------------------------------------- Edit Ad Request Modal ------------------------->
+                    <div class="modal fade" id="editAdrequestModal{{ campaign_index }}-{{ req_index }}" tabindex="-1" aria-labelledby="editAdrequestModal{{ campaign_index }}-{{ req_index }}" aria-hidden="true">
+                      <div class="modal-dialog">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="editAdrequestLabel">Edit User</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <form id="editUserForm" action="{{ url_for('edit_adreq', id=req.id, user_id=user.id) }}" method="POST">
+                              <div class="form-group">
+                                <label for="editPayment">Payment Amount</label>
+                                <input type="number" class="form-control" id="editPayment{{ campaign_index }}-{{ req_index }}" name="payment" value="{{ req.payment_amount }}" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="editRequirements">Requirement</label>
+                                <input type="text" class="form-control" id="editRequirements{{ campaign_index }}-{{ req_index }}" name="Req" value="{{ req.requirements }}" required>
+                              </div>
+                              <div class="form-group">
+                                <label for="editMessage">Message</label>
+                                <input type="text" class="form-control" id="editMessage{{ campaign_index }}-{{ req_index }}" name="Message" required value="{{ req.messages }}">
+                              </div>
+                              <button type="submit" class="btn btn-primary">Save Changes</button>
+                            </form>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    {% endfor %}
+                  </tbody>
+                </table>
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!------------------------------------------------ Update Campaign Modal ----------------------------------------------->
+      <div class="modal fade" id="updatecampaignModal{{ campaign_index }}" tabindex="-2" role="dialog" aria-labelledby="updatecampaignModal{{ campaign_index }}" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="updatecampaignModal{{ campaign_index }}">{{ campaign.name }} Details</h5>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+              </button>
+            </div>
+            <div class="modal-body">
+              <form action="{{ url_for('update_camp', id=campaign.id, user_id=user.id) }}" method="POST">
+                <div class="form-group">
+                  <label for="campaignName">Campaign Name</label>
+                  <input type="text" class="form-control" name="Name" id="campaignName{{ campaign_index }}" value="{{ campaign.name }}" required>
+                </div>
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <textarea class="form-control" id="description{{ campaign_index }}" name="description" rows="4" required>{{ campaign.description }}</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="startDate">Start Date</label>
+                  <input type="date" class="form-control" name="Start_date" id="startDate{{ campaign_index }}" value="{{ campaign.start_date.strftime('%Y-%m-%d') }}" required>
+                </div>
+                <div class="form-group">
+                  <label for="endDate">End Date</label>
+                  <input type="date" class="form-control" name="end_date" id="endDate{{ campaign_index }}" value="{{ campaign.end_date.strftime('%Y-%m-%d') }}" required>
+                </div>
+                <div class="form-group">
+                  <label for="budget">Budget</label>
+                  <input type="number" class="form-control" name="Budget" id="budget{{ campaign_index }}" value="{{ campaign.budget }}" required>
+                </div>
+                <div class="form-group">
+                  <label for="visibility">Visibility</label>
+                  <select class="form-control" name="visibility" id="visibility{{ campaign_index }}" required>
+                    <option value="public" {% if campaign.visibility == 'public' %}selected{% endif %}>Public</option>
+                    <option value="private" {% if campaign.visibility == 'private' %}selected{% endif %}>Private</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="goals">Goals</label>
+                  <textarea class="form-control" id="goals{{ campaign_index }}" name="goals" rows="4" required>{{ campaign.goals }}</textarea>
+                </div>
+                <div class="form-group">
+                  <label for="niche">Niche/Category</label>
+                  <input type="text" class="form-control" name="category" id="niche{{ campaign_index }}" value="{{ campaign.category }}" required>
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">Save</button>
+                  <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>
